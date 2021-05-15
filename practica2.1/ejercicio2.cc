@@ -69,7 +69,7 @@ int main(int argc, char**argv){
         struct sockaddr client;  //al ser un parametro de salida no hace falta inicializarlo
         socklen_t clientLen = sizeof(struct sockaddr); //al ser un parametro de e/s hay que inicializarlo
 
-        int bytes = recvfrom(sck, (void * ) buffer, len, 0 , &client, &clientLen); 
+        int bytes = recvfrom(sck, (void * ) buffer, len-1, 0 , &client, &clientLen); 
         if(bytes == -1){
             return -1;
         }
