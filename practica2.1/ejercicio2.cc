@@ -73,7 +73,13 @@ int main(int argc, char**argv){
         if(bytes == -1){
             return -1;
         }
-        print(&client, &clientLen);
+        char host[NI_MAXHOST]; //contenedores de la información sacada por getnameinfo
+        char serv[NI_MAXSERV];
+        int nameInfo = getnameinfo(&client, clientLen , 
+                                    host, NI_MAXHOST,
+                                    serv, NI_MAXSERV, NI_NUMERICHOST+NI_NUMERICSERV);
+        
+        std::cout << "Host: "<< host << " Port: " << serv << std::endl;
         std::cout << "\tData: "<< buffer << std::endl;
 
         sendto(sck, buffer, bytes, 0, &client, clientLen);        
@@ -81,14 +87,4 @@ int main(int argc, char**argv){
     close(sck);
     freeaddrinfo(res); //liberar memoria
     return 0;
-}
-
-void print(const struct sockaddr *addr, socklen_t addrlen){
-    char host[NI_MAXHOST]; //contenedores de la información sacada por getnameinfo
-    char serv[NI_MAXSERV];
-    int nameInfo = getnameinfo(addr, addrlen , 
-                                host, NI_MAXHOST,
-                                serv, NI_MAXSERV, NI_NUMERICHOST+NI_NUMERICSERV);
-        
-    std::cout << "Host: "<< host << " Port: " << serv << std::endl;
 }
