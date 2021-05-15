@@ -59,7 +59,7 @@ int main(int argc, char**argv){
 
     //------------------    
     //ASOCIAR DIRECCIÓN AL SOCKET  
-    int bnd = bind(sck, res->ai_addr, res->addrlen);     
+    int bnd = bind(sck, res->ai_addr, res->ai_addrlen);     
 
     //------------------ 
     //COMUNICACIÓN
