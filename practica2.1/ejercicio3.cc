@@ -8,27 +8,8 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <time.h>
-/*MAN
-int bind(int sockfd, const struct sockaddr *addr,
-                socklen_t addrlen);
-el sockaddr se saca de:
-int getaddrinfo(const char *node, const char *service,
-                       const struct addrinfo *hints,
-                       struct addrinfo **res);
-
-       void freeaddrinfo(struct addrinfo *res);
-
-       const char *gai_strerror(int errcode);
-int socket(int domain, int type, int protocol); //family, socktype, protocol
-bind(sock, (struct sockaddr *), ai_addr, ai_addrlen)
-despues de hacer bind, hacer sendto y recvfrom
-ssize_t sendto(int sockfd, const void *buf, size_t len, int flags,
-                      const struct sockaddr *dest_addr, socklen_t addrlen);
-ssize_t recvfrom(int sockfd, void *buf, size_t len, int flags,
-                        struct sockaddr *src_addr, socklen_t *addrlen);
-*/
 //---------------------------------------------------------------------------------//
-//                              SERVIDOR UDP
+//                              CLIENTE UDP
 //---------------------------------------------------------------------------------//
 int main(int argc, char**argv){
     //RECEPCION DE IP Y PUERTO
