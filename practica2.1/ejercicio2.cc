@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <time.h>
 /*MAN
 int bind(int sockfd, const struct sockaddr *addr,
                 socklen_t addrlen);
@@ -63,13 +64,15 @@ int main(int argc, char**argv){
 
     //------------------ 
     //COMUNICACIÓN
-    while (true){                                                   
+    bool quit = false;
+    while (!quit){                                                   
         int len = 80;                                          
         char buffer[len];        //buffer de 80 posiciones de memoria
         struct sockaddr client;  //al ser un parametro de salida no hace falta inicializarlo
         socklen_t clientLen = sizeof(struct sockaddr); //al ser un parametro de e/s hay que inicializarlo
 
         int bytes = recvfrom(sck, (void * ) buffer, len-1, 0 , &client, &clientLen); 
+        buffer[bytes] = '\0';
         if(bytes == -1){
             return -1;
         }
@@ -82,7 +85,44 @@ int main(int argc, char**argv){
         std::cout << "Host: "<< host << " Port: " << serv << std::endl;
         std::cout << "\tData: "<< buffer << std::endl;
 
-        sendto(sck, buffer, bytes, 0, &client, clientLen);        
+        //preparacion del mensaje de envío de vuelta
+        std::string answer;
+        char char_array[15];
+        memset((void*) &char_array, 0, sizeof (char_array));
+        time_t t = time(NULL);
+        struct tm* res = localtime(&t);;
+        if(buffer[0] == 't') { 
+            strftime(char_array, sizeof(char_array), "%r", res);
+            std::cout << answer << std::endl;
+            strcpy(char_array, answer.c_str());
+            sendto(sck, char_array, sizeof(char_array), 0, &client, clientLen);  
+        }      
+        else if(buffer[0] == 'd'){ 
+            strftime(char_array, sizeof(char_array), "%D", res);
+            std::cout << answer << std::endl;
+            strcpy(char_array, answer.c_str());
+            sendto(sck, char_array, sizeof(char_array), 0, &client, clientLen);  
+        } 
+        else if(buffer[0] == 'q'){ 
+            quit = true;
+            answer = "QUITTING...";
+            std::cout << answer << std::endl;
+            int n = answer.length();
+            char c[n+1];
+            memset((void*) &c, 0, sizeof (c));
+            strcpy(c, answer.c_str());
+            sendto(sck, c, sizeof(c), 0, &client, clientLen);  
+        }
+    	else{
+            answer = "Commands: t (time) ; d (day) ; q (quit)";
+            std::cout << answer << std::endl;
+            int n = answer.length();
+            char c[n+1];
+            memset((void*) &c, 0, sizeof (c));
+            strcpy(c, answer.c_str());
+            sendto(sck, c, sizeof(c), 0, &client, clientLen);  
+        }
+           
     }
     close(sck);
     freeaddrinfo(res); //liberar memoria
