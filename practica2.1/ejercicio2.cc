@@ -87,20 +87,18 @@ int main(int argc, char**argv){
 
         //preparacion del mensaje de envío de vuelta
         std::string answer;
-        char char_array[15];
+        char char_array[80];
         memset((void*) &char_array, 0, sizeof (char_array));
         time_t t = time(NULL);
         struct tm* res = localtime(&t);;
         if(buffer[0] == 't') { 
             strftime(char_array, sizeof(char_array), "%r", res);
-            std::cout << answer << std::endl;
-            strcpy(char_array, answer.c_str());
+            std::cout << char_array << std::endl;
             sendto(sck, char_array, sizeof(char_array), 0, &client, clientLen);  
         }      
         else if(buffer[0] == 'd'){ 
             strftime(char_array, sizeof(char_array), "%D", res);
-            std::cout << answer << std::endl;
-            strcpy(char_array, answer.c_str());
+            std::cout << char_array << std::endl;
             sendto(sck, char_array, sizeof(char_array), 0, &client, clientLen);  
         } 
         else if(buffer[0] == 'q'){ 
